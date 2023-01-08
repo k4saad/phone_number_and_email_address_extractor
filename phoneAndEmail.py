@@ -23,11 +23,11 @@ numbersAndEmails = '''
 
 # Creating phone regex
 
-phoneRegex = re.compile(r''' 
+phoneRegex = re.compile(r'''( 
     (\+91|0{0,2})?  #Country code
     ([-|\s])?       #Separator
     ([6789]\d{9})   #Phone Number
-    ''', re.VERBOSE)
+    )''', re.VERBOSE)
 
 # Creating email regex
 
@@ -38,8 +38,21 @@ emailRegex = re.compile(r'''(
     \.[a-zA-Z]{2,4}         #Dot extension
     )''', re.VERBOSE)
 
+# Finding matches in clipboard
 
+text = str(pyperclip.paste())
+matches = []
 
-results = phoneRegex.findall(numbersAndEmails)
+for group in phoneRegex.findall(text):
+    match = group[0]
+    matches.append(match)
 
-print(results)
+for group in emailRegex.findall(text):
+    match = group[0]
+    matches.append(match)
+
+if len(matches)>0:
+    pyperclip.copy('\n'.join(matches))
+    print('\n'.join(matches))
+else:
+    print('no matches found')
